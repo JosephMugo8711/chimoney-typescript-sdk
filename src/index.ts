@@ -1,5 +1,3 @@
-// src/index.ts
-
 import { Base } from "./base"; // Importing the Base class
 import { applyMixins } from "./utils"; // Importing the mixin utility function
 import { Payments } from "./payments";

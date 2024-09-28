@@ -40,7 +40,7 @@ export class Base {
         return this.apiKey;
     }
 
-    // Example of a method to make an API request
+    // Generic API request method
     protected async apiRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
         try {
             const response = await fetch(`${this.getBaseUrl()}/${endpoint}`, {
@@ -48,18 +48,34 @@ export class Base {
                 headers: {
                     ...options.headers,
                     'Authorization': `Bearer ${this.getApiKey()}`,
+                    'Content-Type': 'application/json',
                 },
             });
 
             if (!response.ok) {
-                const errorMessage = await response.text(); // Capture error message
+                const errorMessage = await response.text(); // Capture error message from response
                 throw new Error(`API request failed: ${response.statusText} - ${errorMessage}`);
             }
 
-            return await response.json();
+            return await response.json(); // Return parsed JSON response
         } catch (error) {
             console.error('API Request Error:', error);
             throw error; // Re-throw the error after logging
         }
+    }
+
+    // POST request method
+    protected async post(endpoint: string, data: any): Promise<any> {
+        return await this.apiRequest(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    }
+
+    // GET request method (optional if needed)
+    protected async get(endpoint: string): Promise<any> {
+        return await this.apiRequest(endpoint, {
+            method: 'GET',
+        });
     }
 }
